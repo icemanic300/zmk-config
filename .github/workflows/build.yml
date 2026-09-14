@@ -15,17 +15,8 @@ jobs:
     name: Build
 
     steps:
-      # ------------------------------------------------------
-      # Checkout
-      # ------------------------------------------------------
-
       - name: Checkout
         uses: actions/checkout@v4
-
-
-      # ------------------------------------------------------
-      # Cache
-      # ------------------------------------------------------
 
       - name: Cache west modules
         uses: actions/cache@v4
@@ -44,11 +35,6 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-
-      # ------------------------------------------------------
-      # West
-      # ------------------------------------------------------
-
       - name: West Init
         run: west init -l config
 
@@ -58,38 +44,29 @@ jobs:
       - name: West Zephyr export
         run: west zephyr-export
 
-
-      # ======================================================
+      # ============================================================
       # CORNE LEFT
-      # ======================================================
+      # ============================================================
 
       - name: West Build (Corne Left)
         run: |
           west build \
             -s zmk/app \
-            -b nrfmicro_13 \
+            -b nrfmicro/nrf52840/zmk \
             -- \
             -DSHIELD=corne_left \
             -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
 
-
-      # ------------------------------------------------------
-      # Debug: DTS
-      # ------------------------------------------------------
-
       - name: Corne Left DTS
         if: always()
         run: |
-          if [ -f build/zephyr/nrfmicro_13.dts.pre.tmp ]; then
+          if [ -f build/zephyr/nrfmicro_nrf52840_zmk.dts.pre.tmp ]; then
+            cat -n build/zephyr/nrfmicro_nrf52840_zmk.dts.pre.tmp
+          elif [ -f build/zephyr/nrfmicro_13.dts.pre.tmp ]; then
             cat -n build/zephyr/nrfmicro_13.dts.pre.tmp
           else
             echo "DTS file not found"
           fi
-
-
-      # ------------------------------------------------------
-      # Debug: Kconfig
-      # ------------------------------------------------------
 
       - name: Corne Left Kconfig
         if: always()
@@ -100,45 +77,40 @@ jobs:
             echo "Kconfig file not found"
           fi
 
-
-      # ------------------------------------------------------
-      # Rename firmware
-      # ------------------------------------------------------
-
       - name: Rename left firmware
         run: |
-          cp build/zephyr/zmk.uf2 corne_left_nrfmicro_13.uf2
-
-
-      # ------------------------------------------------------
-      # Upload left firmware
-      # ------------------------------------------------------
+          cp build/zephyr/zmk.uf2 corne_left_nrfmicro.uf2
 
       - name: Upload left firmware
         uses: actions/upload-artifact@v4
         with:
           name: corne-left-firmware
-          path: corne_left_nrfmicro_13.uf2
+          path: corne_left_nrfmicro.uf2
 
-
-      # ======================================================
+      # ============================================================
       # CORNE RIGHT
-      # ======================================================
+      # ============================================================
 
       - name: West Build (Corne Right)
         run: |
           west build \
             --pristine \
             -s zmk/app \
-            -b nrfmicro_13 \
+            -b nrfmicro/nrf52840/zmk \
             -- \
             -DSHIELD=corne_right \
             -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
 
-
-      # ------------------------------------------------------
-      # Debug: Kconfig
-      # ------------------------------------------------------
+      - name: Corne Right DTS
+        if: always()
+        run: |
+          if [ -f build/zephyr/nrfmicro_nrf52840_zmk.dts.pre.tmp ]; then
+            cat -n build/zephyr/nrfmicro_nrf52840_zmk.dts.pre.tmp
+          elif [ -f build/zephyr/nrfmicro_13.dts.pre.tmp ]; then
+            cat -n build/zephyr/nrfmicro_13.dts.pre.tmp
+          else
+            echo "DTS file not found"
+          fi
 
       - name: Corne Right Kconfig
         if: always()
@@ -149,22 +121,12 @@ jobs:
             echo "Kconfig file not found"
           fi
 
-
-      # ------------------------------------------------------
-      # Rename firmware
-      # ------------------------------------------------------
-
       - name: Rename right firmware
         run: |
-          cp build/zephyr/zmk.uf2 corne_right_nrfmicro_13.uf2
-
-
-      # ------------------------------------------------------
-      # Upload right firmware
-      # ------------------------------------------------------
+          cp build/zephyr/zmk.uf2 corne_right_nrfmicro.uf2
 
       - name: Upload right firmware
         uses: actions/upload-artifact@v4
         with:
           name: corne-right-firmware
-          path: corne_right_nrfmicro_13.uf2
+          path: corne_right_nrfmicro.uf2
