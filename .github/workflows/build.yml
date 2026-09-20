@@ -55,7 +55,7 @@ jobs:
             -b nrfmicro/nrf52840/zmk \
             -- \
             -DSHIELD=corne_left \
-            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" \
             -DDTC_OVERLAY_FILE="${GITHUB_WORKSPACE}/config/corne_rgb.overlay"
 
       - name: Corne Left DTS
@@ -100,7 +100,7 @@ jobs:
             -b nrfmicro/nrf52840/zmk \
             -- \
             -DSHIELD=corne_right \
-            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config" \
             -DDTC_OVERLAY_FILE="${GITHUB_WORKSPACE}/config/corne_rgb.overlay"
 
       - name: Corne Right DTS
