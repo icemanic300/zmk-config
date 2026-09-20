@@ -56,6 +56,7 @@ jobs:
             -- \
             -DSHIELD=corne_left \
             -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+            -DTC_OVERLAY_FILE="${GITHUB_WORKSPACE}/config/corne_rgb.overlay"
 
       - name: Corne Left DTS
         if: always()
@@ -100,6 +101,7 @@ jobs:
             -- \
             -DSHIELD=corne_right \
             -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+            -DTC_OVERLAY_FILE="${GITHUB_WORKSPACE}/config/corne_rgb.overlay"
 
       - name: Corne Right DTS
         if: always()
